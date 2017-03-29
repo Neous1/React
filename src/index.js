@@ -1,6 +1,10 @@
-import React from 'react';
+import React, {Component} from 'react';
 import ReactDom from 'react-dom';
-import SearchBar from './components/search_bar'
+import YTSearch from "youtube-api-search";
+import VideoList from "./components/video_list";
+
+
+import SearchBar from './components/search_bar';
 
 // create a new componet . This component shoujld produce some html
 
@@ -8,15 +12,28 @@ import SearchBar from './components/search_bar'
 const API_KEY = "AIzaSyBSS49i2Adws1dhwRKjIlfL85brIGDk_fs"
 
 
-const App = () => {
-	return (
-		<div>
-			<SearchBar /> 
-		</div>
-		);
 
+class App extends Component {
+	constructor(props){
+		super(props);
+
+		this.state = { videos :[]};
+
+		YTSearch({key: API_KEY, term: 'reactjs'}, (videos) => {
+			this.setState({ videos });
+			
+		});
+	}
+
+	render(){
+		return (
+			<div>
+				<SearchBar /> 
+				<VideoList videos ={this.state.videos}/>
+			</div>
+		);	
+	}
+	
 }
-
-// take this component's generated html and put in on the page(in the DOM)
 
 ReactDom.render(<App></App>, document.querySelector('.container'));
